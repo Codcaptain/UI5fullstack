@@ -1,0 +1,44 @@
+{
+  "name": "ReportMyMachine",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^9",
+    "@cap-js/hana": "^2",
+    "@sap/xsenv": "^6.0.0",
+    "@sap/xssec": "^4",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9",
+    "@cap-js/sqlite": "^2",
+    "cds-plugin-ui5": "^0.13.0",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.29"
+  },
+  "scripts": {
+    "start": "cds run",
+    "watch-ui5app": "cds watch --open com.incture.ui5app/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy ReportMyMachine --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-capmapp": "cds watch --open com.incture.capmapp/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-uicapm": "cds watch --open com.incture.uicapm/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "cds": {
+    "requires": {
+      "auth": {
+        "kind": "dummy"
+      },
+      "[production]": {
+        "auth": {
+          "kind": "xsuaa"
+        }
+      }
+    }
+  },
+  "workspaces": [
+    "app/*"
+  ]
+}

@@ -1,0 +1,1 @@
+using MyMachine as service from '../../srv/MyMachine';

@@ -1,0 +1,15 @@
+<mvc:View controllerName="com.meenakshi.fioriappproject.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+    <content>
+    <List
+		headerText="MachineData"
+		headerLevel="H2"
+		items="{oMyMachineDataModel>/Verification}">
+		<StandardListItem
+			title="{oMyMachineDataModel>Customer_and_Number}"
+			description="{oMyMachineDataModel>Machine_Description}"/>
+	</List></content>
+    </Page>
+</mvc:View>

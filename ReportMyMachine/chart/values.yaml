@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=./values.schema.json
+
+global:
+  domain: <cluster-domain>
+  imagePullSecret:
+    name: docker-registry
+  image:
+    registry: <registry-server>
+    tag: latest
+srv:
+  bindings:
+    db:
+      serviceInstanceName: hana
+    auth:
+      serviceInstanceName: xsuaa
+  image:
+    repository: ReportMyMachine-srv
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+  networkSecurity:
+    allowNamespaceInternal: true
+hana-deployer:
+  image:
+    repository: ReportMyMachine-hana-deployer
+  bindings:
+    hana:
+      serviceInstanceName: hana
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1G
+    requests:
+      cpu: 1000m
+      memory: 1G
+hana:
+  serviceOfferingName: hana
+  servicePlanName: hdi-shared
+approuter:
+  image:
+    repository: ReportMyMachine-approuter
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /
+    readiness:
+      path: /
+  envFrom:
+    - configMapRef:
+        name: "{{ .Release.Name }}-approuter-configmap"
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+backendDestinations:
+  srv-api:
+    service: srv
+xsuaa:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    tenant-mode: dedicated
+    oauth2-configuration:
+      redirect-uris:
+        - https://*.{{ tpl .Values.global.domain . }}/**
+    xsappname: ReportMyMachine-{{ .Release.Namespace }}

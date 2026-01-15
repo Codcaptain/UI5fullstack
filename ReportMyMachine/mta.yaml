@@ -1,0 +1,142 @@
+_schema-version: 3.3.0
+ID: ReportMyMachine
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: ReportMyMachine-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: ReportMyMachine-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: ReportMyMachine-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: ReportMyMachine-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: ReportMyMachine
+  type: approuter.nodejs
+  path: app/router
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: ReportMyMachine-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com
+  provides:
+  - name: app-api
+    properties:
+      app-protocol: ${protocol}
+      app-uri: ${default-uri}
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: ReportMyMachine-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: ReportMyMachine-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - cominctureui5app.zip
+      name: cominctureui5app
+      target-path: resources/
+    - artifacts:
+      - comincturecapmapp.zip
+      name: comincturecapmapp
+      target-path: resources/
+    - artifacts:
+      - cominctureuicapm.zip
+      name: cominctureuicapm
+      target-path: resources/
+- name: cominctureui5app
+  type: html5
+  path: app/ui5app
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comincturecapmapp
+  type: html5
+  path: app/capmapp
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: cominctureuicapm
+  type: html5
+  path: app/uicapm
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: ReportMyMachine-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: ReportMyMachine-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: ReportMyMachine-html5-service
+    service-plan: app-host
+- name: ReportMyMachine-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: ReportMyMachine-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

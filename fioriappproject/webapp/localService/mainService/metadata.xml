@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="MyMachine" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotation Term="Core.Links">
+                <Collection>
+                    <Record>
+                        <PropertyValue Property="rel" String="author"/>
+                        <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+                    </Record>
+                </Collection>
+            </Annotation>
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Verification" EntityType="MyMachine.Verification"/>
+            </EntityContainer>
+            <EntityType Name="Verification">
+                <Key>
+                    <PropertyRef Name="New_Serial_Number"/>
+                </Key>
+                <Property Name="Customer_and_Number" Type="Edm.String"/>
+                <Property Name="Machine_Description" Type="Edm.String"/>
+                <Property Name="New_Serial_Number" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Legacy_Serial_Number" Type="Edm.Int32"/>
+                <Property Name="End_User" Type="Edm.String"/>
+                <Property Name="Verification_Date" Type="Edm.Date"/>
+                <Property Name="Requested_By" Type="Edm.String"/>
+            </EntityType>
+            <Annotations Target="MyMachine.Verification">
+                <Annotation Term="UI.FieldGroup" Qualifier="GeneratedGroup">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Customer_and_Number"/>
+                                    <PropertyValue Property="Value" Path="Customer_and_Number"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Machine_Description"/>
+                                    <PropertyValue Property="Value" Path="Machine_Description"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="New_Serial_Number"/>
+                                    <PropertyValue Property="Value" Path="New_Serial_Number"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Legacy_Serial_Number"/>
+                                    <PropertyValue Property="Value" Path="Legacy_Serial_Number"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="End_User"/>
+                                    <PropertyValue Property="Value" Path="End_User"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Verification_Date"/>
+                                    <PropertyValue Property="Value" Path="Verification_Date"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Requested_By"/>
+                                    <PropertyValue Property="Value" Path="Requested_By"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="GeneratedFacet1"/>
+                            <PropertyValue Property="Label" String="General Information"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GeneratedGroup"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="New_Serial_Number"/>
+                            <PropertyValue Property="Value" Path="New_Serial_Number"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Customer_and_Number"/>
+                            <PropertyValue Property="Value" Path="Customer_and_Number"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Machine_Description"/>
+                            <PropertyValue Property="Value" Path="Machine_Description"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Legacy_Serial_Number"/>
+                            <PropertyValue Property="Value" Path="Legacy_Serial_Number"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="End_User"/>
+                            <PropertyValue Property="Value" Path="End_User"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

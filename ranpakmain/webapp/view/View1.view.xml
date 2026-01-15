@@ -1,0 +1,10 @@
+<mvc:View controllerName="com.incture.ranpakmain.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+    <content><List items="{oMachineDataModel>/Verification}">
+    <StandardListItem title="{oMachineDataModel>Customer_and_Number}" counter="{oMachineDataModel>New_Serial_Number}"></StandardListItem></List>
+    <List items="{oCustomerModel>/Customers}">
+    <StandardListItem title="{oCustomerModel>CustomerID}" counter="{oCustomerModel>Phone}"></StandardListItem></List></content>
+    </Page>
+</mvc:View>
